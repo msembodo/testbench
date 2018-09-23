@@ -60,7 +60,7 @@
                                                                   <TableView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                     <columns>
                                                                       <TableColumn prefWidth="75.0" text="Mapped To" />
-                                                                      <TableColumn prefWidth="75.0" text="Value" />
+                                                                      <TableColumn prefWidth="75.0" text="From MCC Var" />
                                                                     </columns>
                                                                      <columnResizePolicy>
                                                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -84,9 +84,9 @@
                                                                           </rowConstraints>
                                                                            <children>
                                                                               <Label text="Mapped to:" />
-                                                                              <Label text="Value:" GridPane.rowIndex="1" />
+                                                                              <Label text="MCC Var:" GridPane.rowIndex="1" />
                                                                               <TextField GridPane.columnIndex="1" />
-                                                                              <ComboBox prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                              <ComboBox prefWidth="200.0" promptText="(select variable)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                               <TextField disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                               <CheckBox mnemonicParsing="false" text="Fixed" GridPane.rowIndex="2" />
                                                                            </children>
