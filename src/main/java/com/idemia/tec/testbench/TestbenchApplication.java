@@ -1,5 +1,6 @@
 package com.idemia.tec.testbench;
 
+import com.idemia.tec.testbench.model.AdvSaveVariable;
 import com.idemia.tec.testbench.model.VariableMapping;
 import com.idemia.tec.testbench.view.RootLayoutController;
 import com.idemia.tec.testbench.view.TestBenchController;
@@ -11,9 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-//import jfxtras.styles.jmetro8.JMetro;
+import jfxtras.styles.jmetro8.JMetro;
 
-import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -25,18 +25,21 @@ public class TestbenchApplication extends Application {
 
 	private ConfigurableApplicationContext springContext;
 
-	static Logger logger = Logger.getLogger(TestbenchApplication.class.getName());
-
 	private BorderPane rootLayout;
 	private Stage primaryStage;
 	
+	private ObservableList<AdvSaveVariable> advSaveVariables = FXCollections.observableArrayList();
 	private ObservableList<VariableMapping> mappings = FXCollections.observableArrayList();
 	
 	public TestbenchApplication() {
-		// add some sample mappings
-		mappings.add(new VariableMapping("ICCID", "USIM_ICCID", null, false));
-		mappings.add(new VariableMapping("IMSI", "USIM_IMSI", null, false));
-		mappings.add(new VariableMapping("GPIN1", null, "31313131FFFFFFFF", true));
+		// add sample variables
+//		advSaveVariables.add(new AdvSaveVariable("USIM_ICCID", "89034563729453"));
+//		advSaveVariables.add(new AdvSaveVariable("GSM_IMSI", "57832534"));
+		
+		// add sample mappings
+//		mappings.add(new VariableMapping("ICCID", "USIM_ICCID", null, false));
+//		mappings.add(new VariableMapping("IMSI", "USIM_IMSI", null, false));
+//		mappings.add(new VariableMapping("GPIN1", null, "31313131FFFFFFFF", true));
 	}
 
 	public static void main(String[] args) {
@@ -50,6 +53,10 @@ public class TestbenchApplication extends Application {
 		
 		initRootLayout();
 		showTestBench();
+	}
+	
+	public ObservableList<AdvSaveVariable> getAdvSaveVariables() {
+		return advSaveVariables;
 	}
 
 	public ObservableList<VariableMapping> getMappings() {
@@ -72,7 +79,7 @@ public class TestbenchApplication extends Application {
 			loader.setControllerFactory(springContext::getBean);
 			rootLayout = (BorderPane) loader.load();
 			
-//			new JMetro(JMetro.Style.LIGHT).applyTheme(rootLayout);
+			new JMetro(JMetro.Style.LIGHT).applyTheme(rootLayout);
 			
 			// give controller access to main application
 			RootLayoutController controller = loader.getController();

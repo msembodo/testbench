@@ -2,6 +2,7 @@ package com.idemia.tec.testbench.view;
 
 import com.google.gson.Gson;
 import com.idemia.tec.testbench.TestbenchApplication;
+import com.idemia.tec.testbench.model.AdvSaveVariable;
 import com.idemia.tec.testbench.model.VariableMapping;
 
 import javafx.beans.value.ChangeListener;
@@ -23,6 +24,12 @@ import org.springframework.stereotype.Component;
 public class TestBenchController {
 	
 	@FXML
+	private TableView<AdvSaveVariable> tblAdvSave;
+	@FXML
+	private TableColumn<AdvSaveVariable, String> clmnDefined;
+	@FXML
+	private TableColumn<AdvSaveVariable, String> clmnValue;
+	@FXML
 	private TableView<VariableMapping> tblMapping;
 	@FXML
 	private TableColumn<VariableMapping, String> clmnMappedTo;
@@ -37,8 +44,8 @@ public class TestBenchController {
 	@FXML
 	private TextField txtMccVar;
 	
-    static Logger logger = Logger.getLogger(TestBenchController.class.getName());
-
+	static Logger logger = Logger.getLogger(TestBenchController.class);
+	
     private TestbenchApplication application;
 
     @FXML
@@ -53,20 +60,24 @@ public class TestBenchController {
         this.application = application;
         
         // add observable list data to table
+        tblAdvSave.setItems(application.getAdvSaveVariables());
         tblMapping.setItems(application.getMappings());
         
         // initialise MCC variable combo box
-        // TODO: in real case this list will be populated from MCC advance save
-    	for (VariableMapping mapping : application.getMappings()) {
-    		if (!mapping.isFixed())
-    			cmbMccVar.getItems().add(mapping.getMccVariable());
-    	}
+        // in real case this list will be populated from MCC advance save
+//    	for (VariableMapping mapping : application.getMappings()) {
+//    		if (!mapping.isFixed())
+//    			cmbMccVar.getItems().add(mapping.getMccVariable());
+//    	}
     	
-//    	listMapping();
     }
 
     @FXML
     private void initialize() {
+    	// initialise variable table
+    	clmnDefined.setCellValueFactory(celldata -> celldata.getValue().definedVariable());
+    	clmnValue.setCellValueFactory(celldata -> celldata.getValue().value());
+    	
     	// initialise mapping table
     	clmnMappedTo.setCellValueFactory(cellData -> cellData.getValue().mappedVariable());
     	clmnMccVar.setCellValueFactory(cellData -> cellData.getValue().mccVariable());
@@ -109,8 +120,12 @@ public class TestBenchController {
 			cmbMccVar.setValue(null);
 		}
     }
+    
+    public ComboBox<String> getCmbMccVar() {
+		return cmbMccVar;
+	}
 
-    public TabPane getModulesPane() {
+	public TabPane getModulesPane() {
         return modulesPane;
     }
     
@@ -122,10 +137,12 @@ public class TestBenchController {
     			selectedMapping.setFixed(true);
     			selectedMapping.setMccVariable(null);
     			selectedMapping.setValue(txtMccVar.getText());
+    			logger.info(String.format("Update mapping: %s -> %s", selectedMapping.getMappedVariable(), selectedMapping.getValue()));
     		} else {
     			selectedMapping.setFixed(false);
     			selectedMapping.setMccVariable(cmbMccVar.getValue());
     			selectedMapping.setValue(null);
+    			logger.info(String.format("Update mapping: %s -> %s", selectedMapping.getMappedVariable(), selectedMapping.getMccVariable()));
 			}
     	} else {
 			// add new mapping
@@ -138,19 +155,24 @@ public class TestBenchController {
     			mccVariable = null;
     			value = txtMccVar.getText();
     		}
-    		application.getMappings().add(new VariableMapping(mappedVariable, mccVariable, value, fixed));
+    		VariableMapping mapping = new VariableMapping(mappedVariable, mccVariable, value, fixed);
+    		application.getMappings().add(mapping);
+    		if (mapping.isFixed())
+    			logger.info(String.format("Add mapping: %s -> %s", mapping.getMappedVariable(), mapping.getValue()));
+    		else
+    			logger.info(String.format("Add mapping: %s -> %s", mapping.getMappedVariable(), mapping.getMccVariable()));
     	}
-//    	listMapping();
     }
     
     @FXML
     private void handleBtnDeleteMapping() {
 	    if (application.getMappings().size() > 0) {
+	    	logger.info(String.format("Delete mapping: %s", tblMapping.getSelectionModel().getSelectedItem().getMappedVariable()));
 	    	int selectedIndex = tblMapping.getSelectionModel().getSelectedIndex();
 	    	tblMapping.getItems().remove(selectedIndex);
 	    	showMappings(null);
 	    	tblMapping.getSelectionModel().clearSelection();
-//	    	listMapping();
+	    	
     	}
     }
     
