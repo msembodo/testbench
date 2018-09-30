@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import jfxtras.styles.jmetro8.JMetro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -78,9 +77,7 @@ public class TestbenchApplication extends Application {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("view/RootLayout.fxml"));
 			loader.setControllerFactory(springContext::getBean);
 			rootLayout = (BorderPane) loader.load();
-			
-			new JMetro(JMetro.Style.LIGHT).applyTheme(rootLayout);
-			
+						
 			// give controller access to main application
 			RootLayoutController controller = loader.getController();
 			controller.setMainApp(this);
